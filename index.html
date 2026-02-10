@@ -1,0 +1,1232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ViByte Library Management</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- Theme toggles (CSS-only). Separate buttons for light + dark. -->
+  <input type="radio" name="theme" id="theme-light" class="theme-toggle" checked />
+  <input type="radio" name="theme" id="theme-dark" class="theme-toggle" />
+
+  <!-- Login session toggles (CSS-only auth state after explicit login click). -->
+  <input type="checkbox" id="student-session" class="session-toggle" />
+  <input type="checkbox" id="admin-session" class="session-toggle" />
+
+  <!-- Sidebar toggle (CSS-only) to show/hide the menu on demand. -->
+  <input type="checkbox" id="sidebar-toggle" class="sidebar-toggle" />
+
+  <!-- Theme switch is also available before login for better UX -->
+  <div class="prelogin-theme theme-selector" aria-label="Theme selection before login">
+    <label for="theme-dark" class="theme-btn" title="Dark mode">🌙</label>
+    <label for="theme-light" class="theme-btn" title="Light mode">☀️</label>
+  </div>
+
+  <!-- Main layout wrapper -->
+  <div class="app">
+    <!-- Route anchors for CSS-only navigation -->
+    <span id="route-dashboard" class="route"></span>
+    <span id="route-catalog" class="route"></span>
+    <span id="route-issue" class="route"></span>
+    <span id="route-pod" class="route"></span>
+    <span id="route-events" class="route"></span>
+    <span id="route-history" class="route"></span>
+    <span id="route-admin" class="route"></span>
+    <span id="route-login" class="route"></span>
+    <span id="route-signup" class="route"></span>
+
+    <!-- Sidebar navigation (hidden until login) -->
+    <aside class="sidebar">
+      <div class="brand">
+        <span class="brand-icon">📚</span>
+        <div>
+          <h1>ViByte Library</h1>
+          <p>Student-friendly portal</p>
+        </div>
+      </div>
+
+      <!-- Navigation links use :target for CSS-only page switching -->
+      <nav class="nav">
+        <a href="#route-dashboard" class="nav-link">🏠 Home</a>
+        <a href="#route-catalog" class="nav-link">📚 Book Catalog</a>
+        <a href="#route-issue" class="nav-link">🧾 Issue / Return</a>
+        <a href="#route-pod" class="nav-link">🪑 Pod Booking</a>
+        <a href="#route-events" class="nav-link">🎟️ Events & Study Hub</a>
+        <a href="#route-history" class="nav-link">🧑‍🎓 History / Profile</a>
+        <a href="#route-admin" class="nav-link admin-only admin-nav">🛡️ Admin Controls</a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <a href="index.html" class="nav-link">Log out</a>
+        <p class="hint">Tip: Use the hotbar icons for quick jumps ✨</p>
+      </div>
+    </aside>
+
+    <!-- Content area -->
+    <main class="content">
+      <!-- Top bar with quick actions -->
+      <div class="topbar">
+        <!-- Sidebar toggle button -->
+        <label for="sidebar-toggle" class="icon-btn" title="Toggle sidebar">☰</label>
+
+        <!-- Hotbar icons for faster navigation (like a mini dock) -->
+        <div class="hotbar">
+          <a href="#route-dashboard" title="Dashboard">🏠</a>
+          <a href="#route-catalog" title="Catalog">📖</a>
+          <a href="#route-issue" title="Issue / Return">🧾</a>
+          <a href="#route-pod" title="Pod Booking">🪑</a>
+          <a href="#route-events" title="Events">🎟️</a>
+          <a href="#route-history" title="History">🕒</a>
+          <a href="#route-admin" title="Admin Controls" class="admin-only admin-nav">🛡️</a>
+        </div>
+
+        <!-- Theme buttons (separate icons, hover blur enabled) -->
+        <div class="theme-selector" aria-label="Theme selection">
+          <label for="theme-dark" class="theme-btn" title="Dark mode">🌙</label>
+          <label for="theme-light" class="theme-btn" title="Light mode">☀️</label>
+        </div>
+      </div>
+
+      <!-- Login page (default view) -->
+      <section id="login" class="page active login-page">
+        <div class="login-shell">
+          <div class="login-shell-top">
+            <div class="login-brand">
+              <span class="logo-soft">Vi</span><strong>Byte</strong>
+            </div>
+            <a href="#route-signup" class="btn ghost login-signup">Sign Up</a>
+          </div>
+
+          <div class="login-shell-body">
+            <div class="login-left">
+              <header class="page-header">
+                <h2>Welcome Back 👋</h2>
+                <p>Log in to unlock your personalized library experience.</p>
+              </header>
+
+              <div class="grid two">
+                <article class="card">
+                  <h3>Student Login</h3>
+                  <p>Access your issued books, due dates, and history.</p>
+                  <form class="form login-form" id="student-login-form">
+                    <!-- Student login form (HTML validation handles wrong credentials). -->
+                    <label>
+                      Student ID
+                      <input
+                        type="text"
+                        name="student-id"
+                        autocomplete="off"
+                        autocapitalize="off"
+                        spellcheck="false"
+                        placeholder="STU2024"
+                        pattern="STU2024"
+                        title="Use Student ID: STU2024"
+                        required
+                      />
+                    </label>
+                    <label>
+                      Password
+                      <input
+                        type="password"
+                        name="student-password"
+                        autocomplete="new-password"
+                        autocapitalize="off"
+                        spellcheck="false"
+                        placeholder="Read@2024"
+                        pattern="Read@2024"
+                        title="Use Password: Read@2024"
+                        required
+                      />
+                    </label>
+                    <p class="login-hint">Student demo: <strong>STU2024</strong> / <strong>Read@2024</strong></p>
+                    <input type="checkbox" id="student-attempt" class="attempt-toggle" />
+                    <p class="login-error">Wrong credentials. Please use the demo login above.</p>
+                    <label for="student-attempt" class="btn primary login-attempt">Login as Student</label>
+                    <label for="student-session" class="btn ghost login-arm">Enable Student Session</label>
+                    <a href="#route-dashboard" class="btn primary login-link">Enter Dashboard</a>
+                  </form>
+                </article>
+
+                <article class="card highlight">
+                  <h3>Admin Login</h3>
+                  <p>Manage fines, book status, and issue approvals.</p>
+                  <p class="sub">Demo credentials: <strong>ADMIN001</strong> / <strong>Lib@2024</strong></p>
+                  <form class="form login-form" id="admin-login-form">
+                    <label>
+                      Admin ID
+                      <input
+                        type="text"
+                        name="admin-id"
+                        autocomplete="off"
+                        autocapitalize="off"
+                        spellcheck="false"
+                        placeholder="ADMIN001"
+                        pattern="ADMIN001"
+                        title="Use Admin ID: ADMIN001"
+                        required
+                      />
+                    </label>
+                    <label>
+                      Password
+                      <input
+                        type="password"
+                        name="admin-password"
+                        autocomplete="new-password"
+                        autocapitalize="off"
+                        spellcheck="false"
+                        placeholder="Lib@2024"
+                        pattern="Lib@2024"
+                        title="Use Password: Lib@2024"
+                        required
+                      />
+                    </label>
+                    <p class="login-hint">Admin demo: <strong>ADMIN001</strong> / <strong>Lib@2024</strong></p>
+                    <input type="checkbox" id="admin-attempt" class="attempt-toggle" />
+                    <p class="login-error">Access denied. Double-check the admin credentials.</p>
+                    <label for="admin-attempt" class="btn accent login-attempt">Login as Admin</label>
+                    <label for="admin-session" class="btn ghost login-arm">Enable Admin Session</label>
+                    <a href="#route-dashboard" class="btn accent login-link">Enter Dashboard</a>
+                  </form>
+                  <div class="admin-permissions">
+                    <h4>Admin Special Permissions</h4>
+                    <ul>
+                      <li>Add or waive fines</li>
+                      <li>Mark book as lost/damaged</li>
+                      <li>Override due dates</li>
+                      <li>Approve manual issue/return</li>
+                    </ul>
+                  </div>
+                </article>
+              </div>
+            </div>
+
+            <aside class="login-visual card">
+              <h3>ViByte Access Hub</h3>
+              <p>One clean space for students and admins to manage everything in the library.</p>
+              <img
+                src="data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%27900%27%20height%3D%27600%27%20viewBox%3D%270%200%20900%20600%27%3E%3Cdefs%3E%3ClinearGradient%20id%3D%27bg%27%20x1%3D%270%27%20y1%3D%270%27%20x2%3D%271%27%20y2%3D%271%27%3E%3Cstop%20stop-color%3D%27%230d1a35%27/%3E%3Cstop%20offset%3D%271%27%20stop-color%3D%27%232d5ca8%27/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect%20width%3D%27900%27%20height%3D%27600%27%20fill%3D%27url(%23bg)%27/%3E%3Crect%20x%3D%2750%27%20y%3D%2780%27%20width%3D%27310%27%20height%3D%27440%27%20rx%3D%2718%27%20fill%3D%27%23172d56%27/%3E%3Crect%20x%3D%27390%27%20y%3D%2780%27%20width%3D%27460%27%20height%3D%27440%27%20rx%3D%2722%27%20fill%3D%27%23f4f8ff%27%20opacity%3D%270.92%27/%3E%3Ccircle%20cx%3D%27580%27%20cy%3D%27225%27%20r%3D%2760%27%20fill%3D%27%23e4b08e%27/%3E%3Crect%20x%3D%27508%27%20y%3D%27288%27%20width%3D%27145%27%20height%3D%27165%27%20rx%3D%2745%27%20fill%3D%27%23203967%27/%3E%3Crect%20x%3D%27486%27%20y%3D%27335%27%20width%3D%27188%27%20height%3D%27100%27%20rx%3D%2738%27%20fill%3D%27%23284578%27/%3E%3Cpath%20d%3D%27M544%20203%20q35-50%2090-20%27%20stroke%3D%27%231a2f58%27%20stroke-width%3D%2714%27%20fill%3D%27none%27%20stroke-linecap%3D%27round%27/%3E%3Crect%20x%3D%27452%27%20y%3D%27462%27%20width%3D%27265%27%20height%3D%2722%27%20rx%3D%2711%27%20fill%3D%27%232f74ff%27/%3E%3Crect%20x%3D%27445%27%20y%3D%27492%27%20width%3D%27210%27%20height%3D%2719%27%20rx%3D%279.5%27%20fill%3D%27%231aa67a%27/%3E%3Ctext%20x%3D%27205%27%20y%3D%27185%27%20font-size%3D%2738%27%20text-anchor%3D%27middle%27%20fill%3D%27%23c6d9ff%27%20font-family%3D%27Segoe%20UI%2CArial%27%3EViByte%3C/text%3E%3Ctext%20x%3D%27205%27%20y%3D%27250%27%20font-size%3D%2722%27%20text-anchor%3D%27middle%27%20fill%3D%27%2397b2ea%27%20font-family%3D%27Segoe%20UI%2CArial%27%3ELibrary%20Portal%3C/text%3E%3Crect%20x%3D%2795%27%20y%3D%27320%27%20width%3D%27220%27%20height%3D%2738%27%20rx%3D%2714%27%20fill%3D%27%232f74ff%27%20opacity%3D%270.8%27/%3E%3Crect%20x%3D%2795%27%20y%3D%27370%27%20width%3D%27175%27%20height%3D%2738%27%20rx%3D%2714%27%20fill%3D%27%231aa67a%27%20opacity%3D%270.85%27/%3E%3C/svg%3E"
+                alt="Man reading with books in the ViByte portal"
+                loading="lazy"
+              />
+              <div class="pill-list">
+                <span class="pill">📚 Catalog Search</span>
+                <span class="pill">🧾 Issue / Return</span>
+                <span class="pill">💳 Fine Payment</span>
+              </div>
+              <div class="login-metrics">
+                <div><strong>20+</strong><span>Book Categories</span></div>
+                <div><strong>24/7</strong><span>Portal Access</span></div>
+                <div><strong>2 Min</strong><span>Quick Issue Flow</span></div>
+              </div>
+            </aside>
+          </div>
+
+          <div class="card spotlight">
+            <h3>Why students love this portal ❤️</h3>
+            <ul class="list">
+              <li>Smart reminders for due dates <span>Never miss a deadline</span></li>
+              <li>One-tap issue requests <span>Faster than the queue</span></li>
+              <li>Premium reading mood <span>Light/dark themes</span></li>
+            </ul>
+          </div>
+        </div>
+      
+      </section>
+
+      <!-- Sign up page (CSS-only mock flow) -->
+      <section id="signup" class="page login-page">
+        <div class="login-shell">
+          <div class="login-shell-top">
+            <div class="login-brand">
+              <span class="logo-soft">Vi</span><strong>Byte</strong>
+            </div>
+            <a href="#route-login" class="btn ghost login-signup">Back to Login</a>
+          </div>
+
+          <div class="grid two">
+            <article class="card">
+              <h3>Create Student Account</h3>
+              <form class="form">
+                <label>Full Name <input type="text" placeholder="Aarav Mehta" autocomplete="off" /></label>
+                <label>Email <input type="email" placeholder="student@college.edu" autocomplete="off" /></label>
+                <label>Student ID <input type="text" placeholder="STU2025" autocomplete="off" /></label>
+                <label>Password <input type="password" placeholder="Create password" autocomplete="new-password" /></label>
+              </form>
+              <a href="#route-login" class="btn primary">Create Account</a>
+            </article>
+
+            <article class="card highlight">
+              <h3>Why Sign Up?</h3>
+              <ul class="list">
+                <li>Book issue & return tracking <span>Realtime status</span></li>
+                <li>Overdue payment alerts <span>Never miss deadlines</span></li>
+                <li>Premium dashboard insights <span>Study smarter</span></li>
+              </ul>
+              <img
+                src="data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%27900%27%20height%3D%27600%27%20viewBox%3D%270%200%20900%20600%27%3E%3Cdefs%3E%3ClinearGradient%20id%3D%27bg%27%20x1%3D%270%27%20y1%3D%270%27%20x2%3D%271%27%20y2%3D%271%27%3E%3Cstop%20stop-color%3D%27%230f2143%27/%3E%3Cstop%20offset%3D%271%27%20stop-color%3D%27%23356ec5%27/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect%20width%3D%27900%27%20height%3D%27600%27%20fill%3D%27url(%23bg)%27/%3E%3Crect%20x%3D%2758%27%20y%3D%2772%27%20width%3D%27784%27%20height%3D%27458%27%20rx%3D%2724%27%20fill%3D%27%23ffffff%27%20opacity%3D%270.9%27/%3E%3Ccircle%20cx%3D%27275%27%20cy%3D%27220%27%20r%3D%2768%27%20fill%3D%27%23e8b290%27/%3E%3Crect%20x%3D%27192%27%20y%3D%27288%27%20width%3D%27166%27%20height%3D%27172%27%20rx%3D%2748%27%20fill%3D%27%23213f74%27/%3E%3Crect%20x%3D%27178%27%20y%3D%27338%27%20width%3D%27195%27%20height%3D%2790%27%20rx%3D%2738%27%20fill%3D%27%232b4d88%27/%3E%3Cpath%20d%3D%27M228%20204%20q44-46%2098-10%27%20stroke%3D%27%23192f59%27%20stroke-width%3D%2714%27%20stroke-linecap%3D%27round%27%20fill%3D%27none%27/%3E%3Crect%20x%3D%27490%27%20y%3D%27182%27%20width%3D%27270%27%20height%3D%2724%27%20rx%3D%2712%27%20fill%3D%27%232f74ff%27/%3E%3Crect%20x%3D%27490%27%20y%3D%27226%27%20width%3D%27220%27%20height%3D%2720%27%20rx%3D%2710%27%20fill%3D%27%234d84ff%27/%3E%3Crect%20x%3D%27490%27%20y%3D%27265%27%20width%3D%27188%27%20height%3D%2720%27%20rx%3D%2710%27%20fill%3D%27%231aa67a%27/%3E%3Crect%20x%3D%27490%27%20y%3D%27308%27%20width%3D%27235%27%20height%3D%2718%27%20rx%3D%279%27%20fill%3D%27%2394a3c8%27/%3E%3Crect%20x%3D%27490%27%20y%3D%27341%27%20width%3D%27200%27%20height%3D%2718%27%20rx%3D%279%27%20fill%3D%27%2394a3c8%27/%3E%3Ctext%20x%3D%27490%27%20y%3D%27425%27%20font-size%3D%2736%27%20fill%3D%27%23213963%27%20font-family%3D%27Segoe%20UI%2CArial%27%3EWelcome%20to%20ViByte%3C/text%3E%3C/svg%3E"
+                alt="Male student profile card in ViByte"
+                loading="lazy"
+                class="signup-visual"
+              />
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- Dashboard page -->
+      <section id="dashboard" class="page">
+        <header class="page-header">
+          <h2>Dashboard Overview</h2>
+          <p>Quick glance at your library activity and reminders.</p>
+        </header>
+
+        <div class="grid four">
+          <article class="card">
+            <span class="icon">📘</span>
+            <h3>Total Books</h3>
+            <p class="value">20</p>
+          </article>
+          <article class="card">
+            <span class="icon">✅</span>
+            <h3>Books Issued</h3>
+            <p class="value">3</p>
+          </article>
+          <article class="card">
+            <span class="icon">⏰</span>
+            <h3>Due Reminder</h3>
+            <p class="value">2 days left</p>
+            <p class="sub">Return “Clean Code” by 12 Oct</p>
+          </article>
+          <article class="card">
+            <span class="icon">🆕</span>
+            <h3>Recently Issued</h3>
+            <p class="sub">Design Patterns, AI Basics</p>
+          </article>
+        </div>
+
+        <div class="grid two">
+          <article class="card">
+            <h3>Upcoming Returns</h3>
+            <ul class="list">
+              <li>Clean Code <span>12 Oct</span></li>
+              <li>Data Structures <span>18 Oct</span></li>
+            </ul>
+          </article>
+          <article class="card">
+            <h3>Announcements</h3>
+            <p>📣 Library will be open until 8 PM during exam week.</p>
+            <p>✨ New arrivals in AI & ML section.</p>
+          </article>
+        </div>
+
+        <!-- Extra "wow" features to make the dashboard feel alive -->
+        <div class="grid three">
+          <article class="card spotlight">
+            <h3>Innovation: Smart Shelf Radar</h3>
+            <p>Shows trending shelves so you discover popular books first.</p>
+          </article>
+          <article class="card spotlight">
+            <h3>Innovation: Focus Mode</h3>
+            <p>One-tap distraction-free reading recommendations.</p>
+          </article>
+          <article class="card spotlight">
+            <h3>Innovation: Study Buddy Picks</h3>
+            <p>Suggested books based on your course and semester.</p>
+          </article>
+        </div>
+
+        <!-- Room/PC bookings, memberships, and feedback live here -->
+        <div class="grid three">
+          <article class="card">
+            <h3>Quiet Zone Heatmap</h3>
+            <p>Find peaceful seats based on live noise trends (demo).</p>
+            <div class="pill-list">
+              <span class="pill">Block A: Silent ✅</span>
+              <span class="pill">Block B: Low chatter 💤</span>
+              <span class="pill">Block C: Group study 🎧</span>
+              <span class="pill">Block D: Active zone ⚡</span>
+            </div>
+          </article>
+          <article class="card">
+            <h3>Smart Locker Pickup</h3>
+            <p>Reserve a book and collect it from 24/7 smart lockers.</p>
+            <button class="btn ghost">Reserve Locker</button>
+          </article>
+          <article class="card">
+            <h3>Reading Streaks</h3>
+            <p>🔥 You’re on a 5-day streak. Keep it alive!</p>
+            <div class="streak-bar">
+              <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span>
+            </div>
+          </article>
+        </div>
+
+
+        <div class="grid three">
+
+          <article class="card">
+            <h3>Library Computer Booking</h3>
+            <p>Reserve high-performance PCs for assignments.</p>
+            <form class="form">
+              <label>
+                Computer Zone
+                <select>
+                  <option>Design Lab</option>
+                  <option>Programming Hub</option>
+                  <option>Data Science Bay</option>
+                </select>
+              </label>
+              <label>
+                Slot Duration
+                <select>
+                  <option>30 minutes</option>
+                  <option>1 hour</option>
+                  <option>2 hours</option>
+                </select>
+              </label>
+              <button class="btn accent" type="button">Reserve PC</button>
+            </form>
+          </article>
+
+          <article class="card">
+            <h3>Membership Options</h3>
+            <p>Upgrade for premium perks and extended access.</p>
+            <div class="membership">
+              <div class="membership-tier">
+                <strong>Basic</strong>
+                <span>Free</span>
+                <p>2 books, 7-day issue</p>
+              </div>
+              <div class="membership-tier highlight">
+                <strong>Plus</strong>
+                <span>₹199 / semester</span>
+                <p>5 books, 14-day issue</p>
+              </div>
+              <div class="membership-tier">
+                <strong>Elite</strong>
+                <span>₹349 / semester</span>
+                <p>8 books, priority rooms</p>
+              </div>
+            </div>
+            <button class="btn ghost" type="button">Upgrade Membership</button>
+          </article>
+        </div>
+
+        <div class="grid two">
+          <article class="card">
+            <h3>Feedback Lounge</h3>
+            <p>Tell us what you love or what we can improve.</p>
+            <form class="form">
+              <label>
+                Rate the experience
+                <select>
+                  <option>⭐⭐⭐⭐⭐ Amazing</option>
+                  <option>⭐⭐⭐⭐ Great</option>
+                  <option>⭐⭐⭐ Good</option>
+                  <option>⭐⭐ Needs work</option>
+                </select>
+              </label>
+              <label>
+                Your feedback
+                <textarea rows="4" placeholder="Share your thoughts..."></textarea>
+              </label>
+              <button class="btn primary">Send Feedback</button>
+            </form>
+          </article>
+          <article class="card">
+            <h3>Fun Corner 🎉</h3>
+            <p>Quick boosts to keep you motivated.</p>
+            <ul class="list">
+              <li>Daily quiz <span>Win badges</span></li>
+              <li>Reading mood picker <span>Calm / Energetic</span></li>
+              <li>Book swap wall <span>Trade with peers</span></li>
+            </ul>
+            <button class="btn ghost">Join Today</button>
+          </article>
+        </div>
+
+        <div class="grid two">
+          <article class="card">
+            <h3>Study Music Lounge 🎧</h3>
+            <p>Play focused playlists while reading or coding.</p>
+            <div class="pill-list">
+              <a class="pill" href="https://www.youtube.com/watch?v=jfKfPfyJRdk" target="_blank" rel="noopener">Lo-fi Focus</a>
+              <a class="pill" href="https://www.youtube.com/watch?v=DWcJFNfaw9c" target="_blank" rel="noopener">Deep Work Beats</a>
+              <a class="pill" href="https://www.youtube.com/watch?v=5qap5aO4i9A" target="_blank" rel="noopener">Calm Night Study</a>
+            </div>
+          </article>
+          <article class="card">
+            <h3>Animated Study Backgrounds</h3>
+            <p>Choose a visual mood while you study.</p>
+            <div class="video-strip">
+              <iframe src="https://www.youtube.com/embed/jfKfPfyJRdk" title="Lofi live study" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+              <iframe src="https://www.youtube.com/embed/DWcJFNfaw9c" title="Deep work coding ambience" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- Book catalog page -->
+      <section id="catalog" class="page">
+        <header class="page-header">
+          <h2>Book Catalog</h2>
+          <p>Search by name, author, category, or availability.</p>
+        </header>
+
+        <div class="card search-card">
+          <div class="search-grid">
+            <label>
+              Book Name
+              <input type="text" placeholder="Search by title" />
+            </label>
+            <label>
+              Author
+              <input type="text" placeholder="Search by author" />
+            </label>
+            <label>
+              Category
+              <input type="text" placeholder="CS, Fiction, History" />
+            </label>
+            <label>
+              Availability
+              <select>
+                <option>All</option>
+                <option>Available</option>
+                <option>Issued</option>
+              </select>
+            </label>
+          </div>
+          <button class="btn primary">Smart Search 🔍</button>
+        </div>
+
+        <div class="card genre-panel">
+          <h3>Popular Genres</h3>
+          <div class="pill-list">
+            <span class="pill">Computer Science</span>
+            <span class="pill">Artificial Intelligence</span>
+            <span class="pill">Business</span>
+            <span class="pill">Design</span>
+            <span class="pill">Fiction</span>
+            <span class="pill">History</span>
+            <span class="pill">Psychology</span>
+            <span class="pill">Renewable Energy</span>
+            <span class="pill">Biographies</span>
+            <span class="pill">Self-Help</span>
+            <span class="pill">Finance</span>
+            <span class="pill">Philosophy</span>
+          </div>
+        </div>
+
+
+        <div class="grid two">
+          <article class="card">
+            <h3>Popular Books Tab</h3>
+            <p class="sub">Most issued this week in ViByte.</p>
+            <ul class="list">
+              <li>Clean Code <span>126 issues</span></li>
+              <li>Atomic Habits <span>112 issues</span></li>
+              <li>Design Patterns <span>95 issues</span></li>
+              <li>Deep Work <span>83 issues</span></li>
+            </ul>
+          </article>
+          <article class="card highlight">
+            <h3>Recommendations Tab</h3>
+            <p class="sub">Tailored suggestions based on your recent reads.</p>
+            <ul class="list">
+              <li>Refactoring <span>Because you liked Clean Code</span></li>
+              <li>Cracking the PM Interview <span>Career prep</span></li>
+              <li>Thinking, Fast and Slow <span>Behavioral insights</span></li>
+              <li>Hands-On ML <span>AI track continuation</span></li>
+            </ul>
+          </article>
+        </div>
+
+                <div class="grid three">
+          <article class="card book-card">
+            <img class="book-cover" src="data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22420%22%20height%3D%22600%22%20viewBox%3D%220%200%20420%20600%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22g%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%221%22%20y2%3D%221%22%3E%3Cstop%20stop-color%3D%22%23112347%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%231f5ed6%22%2F%3E%3C%2FlinearGradient%3E%3C%2Fdefs%3E%3Crect%20width%3D%22420%22%20height%3D%22600%22%20fill%3D%22url%28%23g%29%22%2F%3E%3Crect%20x%3D%2226%22%20y%3D%2230%22%20width%3D%22368%22%20height%3D%22540%22%20rx%3D%2218%22%20fill%3D%22%2309152d%22%20stroke%3D%22%234f8cff%22%2F%3E%3Ctext%20x%3D%22210%22%20y%3D%22150%22%20font-size%3D%2226%22%20text-anchor%3D%22middle%22%20fill%3D%22%23dbe7ff%22%20font-family%3D%22Segoe%20UI%2CArial%22%3EViByte%20Picks%3C%2Ftext%3E%3Ctext%20x%3D%22210%22%20y%3D%22285%22%20font-size%3D%2238%22%20text-anchor%3D%22middle%22%20fill%3D%22%23ffffff%22%20font-family%3D%22Segoe%20UI%2CArial%22%20font-weight%3D%22700%22%3EClean%20Code%3C%2Ftext%3E%3Ctext%20x%3D%22210%22%20y%3D%22345%22%20font-size%3D%2220%22%20text-anchor%3D%22middle%22%20fill%3D%22%239fbfff%22%20font-family%3D%22Segoe%20UI%2CArial%22%3ELibrary%20Edition%3C%2Ftext%3E%3Crect%20x%3D%2282%22%20y%3D%22430%22%20width%3D%22256%22%20height%3D%2224%22%20rx%3D%2212%22%20fill%3D%22%231aa67a%22%2F%3E%3Crect%20x%3D%22108%22%20y%3D%22468%22%20width%3D%22204%22%20height%3D%2218%22%20rx%3D%229%22%20fill%3D%22%232f74ff%22%2F%3E%3C%2Fsvg%3E" alt="Clean Code cover" loading="lazy" />
+            <h3>Clean Code</h3>
+            <p>Author: Robert C. Martin</p>
+            <p class="status available">Available</p>
+            <button class="btn ghost">Issue</button>
+          </article>
+          <article class="card book-card">
+            <img class="book-cover" src="data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22420%22%20height%3D%22600%22%20viewBox%3D%220%200%20420%20600%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22g%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%221%22%20y2%3D%221%22%3E%3Cstop%20stop-color%3D%22%23112347%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%231f5ed6%22%2F%3E%3C%2FlinearGradient%3E%3C%2Fdefs%3E%3Crect%20width%3D%22420%22%20height%3D%22600%22%20fill%3D%22url%28%23g%29%22%2F%3E%3Crect%20x%3D%2226%22%20y%3D%2230%22%20width%3D%22368%22%20height%3D%22540%22%20rx%3D%2218%22%20fill%3D%22%2309152d%22%20stroke%3D%22%234f8cff%22%2F%3E%3Ctext%20x%3D%22210%22%20y%3D%22150%22%20font-size%3D%2226%22%20text-anchor%3D%22middle%22%20fill%3D%22%23dbe7ff%22%20font-family%3D%22Segoe%20UI%2CArial%22%3EViByte%20Picks%3C%2Ftext%3E%3Ctext%20x%3D%22210%22%20y%3D%22285%22%20font-size%3D%2238%22%20text-anchor%3D%22middle%22%20fill%3D%22%23ffffff%22%20font-family%3D%22Segoe%20UI%2CArial%22%20font-weight%3D%22700%22%3EDesign%20Patterns%3C%2Ftext%3E%3Ctext%20x%3D%22210%22%20y%3D%22345%22%20font-size%3D%2220%22%20text-anchor%3D%22middle%22%20fill%3D%22%239fbfff%22%20font-family%3D%22Segoe%20UI%2CArial%22%3ELibrary%20Edition%3C%2Ftext%3E%3Crect%20x%3D%2282%22%20y%3D%22430%22%20width%3D%22256%22%20height%3D%2224%22%20rx%3D%2212%22%20fill%3D%22%231aa67a%22%2F%3E%3Crect%20x%3D%22108%22%20y%3D%22468%22%20width%3D%22204%22%20height%3D%2218%22%20rx%3D%229%22%20fill%3D%22%232f74ff%22%2F%3E%3C%2Fsvg%3E" alt="Design Patterns cover" loading="lazy" />
+            <h3>Design Patterns</h3>
+            <p>Author: Erich Gamma</p>
+            <p class="status issued">Issued</p>
+            <button class="btn ghost" disabled>Issue</button>
+          </article>
+          <article class="card book-card">
+            <img class="book-cover" src="data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22420%22%20height%3D%22600%22%20viewBox%3D%220%200%20420%20600%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22g%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%221%22%20y2%3D%221%22%3E%3Cstop%20stop-color%3D%22%23112347%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%231f5ed6%22%2F%3E%3C%2FlinearGradient%3E%3C%2Fdefs%3E%3Crect%20width%3D%22420%22%20height%3D%22600%22%20fill%3D%22url%28%23g%29%22%2F%3E%3Crect%20x%3D%2226%22%20y%3D%2230%22%20width%3D%22368%22%20height%3D%22540%22%20rx%3D%2218%22%20fill%3D%22%2309152d%22%20stroke%3D%22%234f8cff%22%2F%3E%3Ctext%20x%3D%22210%22%20y%3D%22150%22%20font-size%3D%2226%22%20text-anchor%3D%22middle%22%20fill%3D%22%23dbe7ff%22%20font-family%3D%22Segoe%20UI%2CArial%22%3EViByte%20Picks%3C%2Ftext%3E%3Ctext%20x%3D%22210%22%20y%3D%22285%22%20font-size%3D%2238%22%20text-anchor%3D%22middle%22%20fill%3D%22%23ffffff%22%20font-family%3D%22Segoe%20UI%2CArial%22%20font-weight%3D%22700%22%3EAI%20Basics%3C%2Ftext%3E%3Ctext%20x%3D%22210%22%20y%3D%22345%22%20font-size%3D%2220%22%20text-anchor%3D%22middle%22%20fill%3D%22%239fbfff%22%20font-family%3D%22Segoe%20UI%2CArial%22%3ELibrary%20Edition%3C%2Ftext%3E%3Crect%20x%3D%2282%22%20y%3D%22430%22%20width%3D%22256%22%20height%3D%2224%22%20rx%3D%2212%22%20fill%3D%22%231aa67a%22%2F%3E%3Crect%20x%3D%22108%22%20y%3D%22468%22%20width%3D%22204%22%20height%3D%2218%22%20rx%3D%229%22%20fill%3D%22%232f74ff%22%2F%3E%3C%2Fsvg%3E" alt="AI Basics cover" loading="lazy" />
+            <h3>AI Basics</h3>
+            <p>Author: Tom Mitchell</p>
+            <p class="status available">Available</p>
+            <button class="btn ghost">Issue</button>
+          </article>
+          <article class="card book-card">
+            <img class="book-cover" src="data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22420%22%20height%3D%22600%22%20viewBox%3D%220%200%20420%20600%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22g%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%221%22%20y2%3D%221%22%3E%3Cstop%20stop-color%3D%22%23112347%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%231f5ed6%22%2F%3E%3C%2FlinearGradient%3E%3C%2Fdefs%3E%3Crect%20width%3D%22420%22%20height%3D%22600%22%20fill%3D%22url%28%23g%29%22%2F%3E%3Crect%20x%3D%2226%22%20y%3D%2230%22%20width%3D%22368%22%20height%3D%22540%22%20rx%3D%2218%22%20fill%3D%22%2309152d%22%20stroke%3D%22%234f8cff%22%2F%3E%3Ctext%20x%3D%22210%22%20y%3D%22150%22%20font-size%3D%2226%22%20text-anchor%3D%22middle%22%20fill%3D%22%23dbe7ff%22%20font-family%3D%22Segoe%20UI%2CArial%22%3EViByte%20Picks%3C%2Ftext%3E%3Ctext%20x%3D%22210%22%20y%3D%22285%22%20font-size%3D%2238%22%20text-anchor%3D%22middle%22%20fill%3D%22%23ffffff%22%20font-family%3D%22Segoe%20UI%2CArial%22%20font-weight%3D%22700%22%3EData%20Structures%3C%2Ftext%3E%3Ctext%20x%3D%22210%22%20y%3D%22345%22%20font-size%3D%2220%22%20text-anchor%3D%22middle%22%20fill%3D%22%239fbfff%22%20font-family%3D%22Segoe%20UI%2CArial%22%3ELibrary%20Edition%3C%2Ftext%3E%3Crect%20x%3D%2282%22%20y%3D%22430%22%20width%3D%22256%22%20height%3D%2224%22%20rx%3D%2212%22%20fill%3D%22%231aa67a%22%2F%3E%3Crect%20x%3D%22108%22%20y%3D%22468%22%20width%3D%22204%22%20height%3D%2218%22%20rx%3D%229%22%20fill%3D%22%232f74ff%22%2F%3E%3C%2Fsvg%3E" alt="Data Structures cover" loading="lazy" />
+            <h3>Data Structures</h3>
+            <p>Author: Seymour Lipschutz</p>
+            <p class="status available">Available</p>
+            <button class="btn ghost">Issue</button>
+          </article>
+          <article class="card book-card">
+            <img class="book-cover" src="data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22420%22%20height%3D%22600%22%20viewBox%3D%220%200%20420%20600%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22g%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%221%22%20y2%3D%221%22%3E%3Cstop%20stop-color%3D%22%23112347%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%231f5ed6%22%2F%3E%3C%2FlinearGradient%3E%3C%2Fdefs%3E%3Crect%20width%3D%22420%22%20height%3D%22600%22%20fill%3D%22url%28%23g%29%22%2F%3E%3Crect%20x%3D%2226%22%20y%3D%2230%22%20width%3D%22368%22%20height%3D%22540%22%20rx%3D%2218%22%20fill%3D%22%2309152d%22%20stroke%3D%22%234f8cff%22%2F%3E%3Ctext%20x%3D%22210%22%20y%3D%22150%22%20font-size%3D%2226%22%20text-anchor%3D%22middle%22%20fill%3D%22%23dbe7ff%22%20font-family%3D%22Segoe%20UI%2CArial%22%3EViByte%20Picks%3C%2Ftext%3E%3Ctext%20x%3D%22210%22%20y%3D%22285%22%20font-size%3D%2238%22%20text-anchor%3D%22middle%22%20fill%3D%22%23ffffff%22%20font-family%3D%22Segoe%20UI%2CArial%22%20font-weight%3D%22700%22%3EDatabase%20Systems%3C%2Ftext%3E%3Ctext%20x%3D%22210%22%20y%3D%22345%22%20font-size%3D%2220%22%20text-anchor%3D%22middle%22%20fill%3D%22%239fbfff%22%20font-family%3D%22Segoe%20UI%2CArial%22%3ELibrary%20Edition%3C%2Ftext%3E%3Crect%20x%3D%2282%22%20y%3D%22430%22%20width%3D%22256%22%20height%3D%2224%22%20rx%3D%2212%22%20fill%3D%22%231aa67a%22%2F%3E%3Crect%20x%3D%22108%22%20y%3D%22468%22%20width%3D%22204%22%20height%3D%2218%22%20rx%3D%229%22%20fill%3D%22%232f74ff%22%2F%3E%3C%2Fsvg%3E" alt="Database Systems cover" loading="lazy" />
+            <h3>Database Systems</h3>
+            <p>Author: Raghu Ramakrishnan</p>
+            <p class="status issued">Issued</p>
+            <button class="btn ghost" disabled>Issue</button>
+          </article>
+          <article class="card book-card">
+            <img class="book-cover" src="data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22420%22%20height%3D%22600%22%20viewBox%3D%220%200%20420%20600%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22g%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%221%22%20y2%3D%221%22%3E%3Cstop%20stop-color%3D%22%23112347%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%231f5ed6%22%2F%3E%3C%2FlinearGradient%3E%3C%2Fdefs%3E%3Crect%20width%3D%22420%22%20height%3D%22600%22%20fill%3D%22url%28%23g%29%22%2F%3E%3Crect%20x%3D%2226%22%20y%3D%2230%22%20width%3D%22368%22%20height%3D%22540%22%20rx%3D%2218%22%20fill%3D%22%2309152d%22%20stroke%3D%22%234f8cff%22%2F%3E%3Ctext%20x%3D%22210%22%20y%3D%22150%22%20font-size%3D%2226%22%20text-anchor%3D%22middle%22%20fill%3D%22%23dbe7ff%22%20font-family%3D%22Segoe%20UI%2CArial%22%3EViByte%20Picks%3C%2Ftext%3E%3Ctext%20x%3D%22210%22%20y%3D%22285%22%20font-size%3D%2238%22%20text-anchor%3D%22middle%22%20fill%3D%22%23ffffff%22%20font-family%3D%22Segoe%20UI%2CArial%22%20font-weight%3D%22700%22%3EOperating%20Systems%3C%2Ftext%3E%3Ctext%20x%3D%22210%22%20y%3D%22345%22%20font-size%3D%2220%22%20text-anchor%3D%22middle%22%20fill%3D%22%239fbfff%22%20font-family%3D%22Segoe%20UI%2CArial%22%3ELibrary%20Edition%3C%2Ftext%3E%3Crect%20x%3D%2282%22%20y%3D%22430%22%20width%3D%22256%22%20height%3D%2224%22%20rx%3D%2212%22%20fill%3D%22%231aa67a%22%2F%3E%3Crect%20x%3D%22108%22%20y%3D%22468%22%20width%3D%22204%22%20height%3D%2218%22%20rx%3D%229%22%20fill%3D%22%232f74ff%22%2F%3E%3C%2Fsvg%3E" alt="Operating Systems cover" loading="lazy" />
+            <h3>Operating Systems</h3>
+            <p>Author: Silberschatz</p>
+            <p class="status available">Available</p>
+            <button class="btn ghost">Issue</button>
+          </article>
+          <article class="card book-card">
+            <img class="book-cover" src="data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22420%22%20height%3D%22600%22%20viewBox%3D%220%200%20420%20600%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22g%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%221%22%20y2%3D%221%22%3E%3Cstop%20stop-color%3D%22%23112347%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%231f5ed6%22%2F%3E%3C%2FlinearGradient%3E%3C%2Fdefs%3E%3Crect%20width%3D%22420%22%20height%3D%22600%22%20fill%3D%22url%28%23g%29%22%2F%3E%3Crect%20x%3D%2226%22%20y%3D%2230%22%20width%3D%22368%22%20height%3D%22540%22%20rx%3D%2218%22%20fill%3D%22%2309152d%22%20stroke%3D%22%234f8cff%22%2F%3E%3Ctext%20x%3D%22210%22%20y%3D%22150%22%20font-size%3D%2226%22%20text-anchor%3D%22middle%22%20fill%3D%22%23dbe7ff%22%20font-family%3D%22Segoe%20UI%2CArial%22%3EViByte%20Picks%3C%2Ftext%3E%3Ctext%20x%3D%22210%22%20y%3D%22285%22%20font-size%3D%2238%22%20text-anchor%3D%22middle%22%20fill%3D%22%23ffffff%22%20font-family%3D%22Segoe%20UI%2CArial%22%20font-weight%3D%22700%22%3EComputer%20Networks%3C%2Ftext%3E%3Ctext%20x%3D%22210%22%20y%3D%22345%22%20font-size%3D%2220%22%20text-anchor%3D%22middle%22%20fill%3D%22%239fbfff%22%20font-family%3D%22Segoe%20UI%2CArial%22%3ELibrary%20Edition%3C%2Ftext%3E%3Crect%20x%3D%2282%22%20y%3D%22430%22%20width%3D%22256%22%20height%3D%2224%22%20rx%3D%2212%22%20fill%3D%22%231aa67a%22%2F%3E%3Crect%20x%3D%22108%22%20y%3D%22468%22%20width%3D%22204%22%20height%3D%2218%22%20rx%3D%229%22%20fill%3D%22%232f74ff%22%2F%3E%3C%2Fsvg%3E" alt="Computer Networks cover" loading="lazy" />
+            <h3>Computer Networks</h3>
+            <p>Author: Andrew S. Tanenbaum</p>
+            <p class="status available">Available</p>
+            <button class="btn ghost">Issue</button>
+          </article>
+          <article class="card book-card">
+            <img class="book-cover" src="data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22420%22%20height%3D%22600%22%20viewBox%3D%220%200%20420%20600%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22g%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%221%22%20y2%3D%221%22%3E%3Cstop%20stop-color%3D%22%23112347%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%231f5ed6%22%2F%3E%3C%2FlinearGradient%3E%3C%2Fdefs%3E%3Crect%20width%3D%22420%22%20height%3D%22600%22%20fill%3D%22url%28%23g%29%22%2F%3E%3Crect%20x%3D%2226%22%20y%3D%2230%22%20width%3D%22368%22%20height%3D%22540%22%20rx%3D%2218%22%20fill%3D%22%2309152d%22%20stroke%3D%22%234f8cff%22%2F%3E%3Ctext%20x%3D%22210%22%20y%3D%22150%22%20font-size%3D%2226%22%20text-anchor%3D%22middle%22%20fill%3D%22%23dbe7ff%22%20font-family%3D%22Segoe%20UI%2CArial%22%3EViByte%20Picks%3C%2Ftext%3E%3Ctext%20x%3D%22210%22%20y%3D%22285%22%20font-size%3D%2238%22%20text-anchor%3D%22middle%22%20fill%3D%22%23ffffff%22%20font-family%3D%22Segoe%20UI%2CArial%22%20font-weight%3D%22700%22%3EModern%20Fiction%3C%2Ftext%3E%3Ctext%20x%3D%22210%22%20y%3D%22345%22%20font-size%3D%2220%22%20text-anchor%3D%22middle%22%20fill%3D%22%239fbfff%22%20font-family%3D%22Segoe%20UI%2CArial%22%3ELibrary%20Edition%3C%2Ftext%3E%3Crect%20x%3D%2282%22%20y%3D%22430%22%20width%3D%22256%22%20height%3D%2224%22%20rx%3D%2212%22%20fill%3D%22%231aa67a%22%2F%3E%3Crect%20x%3D%22108%22%20y%3D%22468%22%20width%3D%22204%22%20height%3D%2218%22%20rx%3D%229%22%20fill%3D%22%232f74ff%22%2F%3E%3C%2Fsvg%3E" alt="Modern Fiction cover" loading="lazy" />
+            <h3>Modern Fiction</h3>
+            <p>Author: Arundhati Roy</p>
+            <p class="status available">Available</p>
+            <button class="btn ghost">Issue</button>
+          </article>
+          <article class="card book-card">
+            <img class="book-cover" src="data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22420%22%20height%3D%22600%22%20viewBox%3D%220%200%20420%20600%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22g%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%221%22%20y2%3D%221%22%3E%3Cstop%20stop-color%3D%22%23112347%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%231f5ed6%22%2F%3E%3C%2FlinearGradient%3E%3C%2Fdefs%3E%3Crect%20width%3D%22420%22%20height%3D%22600%22%20fill%3D%22url%28%23g%29%22%2F%3E%3Crect%20x%3D%2226%22%20y%3D%2230%22%20width%3D%22368%22%20height%3D%22540%22%20rx%3D%2218%22%20fill%3D%22%2309152d%22%20stroke%3D%22%234f8cff%22%2F%3E%3Ctext%20x%3D%22210%22%20y%3D%22150%22%20font-size%3D%2226%22%20text-anchor%3D%22middle%22%20fill%3D%22%23dbe7ff%22%20font-family%3D%22Segoe%20UI%2CArial%22%3EViByte%20Picks%3C%2Ftext%3E%3Ctext%20x%3D%22210%22%20y%3D%22285%22%20font-size%3D%2238%22%20text-anchor%3D%22middle%22%20fill%3D%22%23ffffff%22%20font-family%3D%22Segoe%20UI%2CArial%22%20font-weight%3D%22700%22%3EHistory%20of%20Science%3C%2Ftext%3E%3Ctext%20x%3D%22210%22%20y%3D%22345%22%20font-size%3D%2220%22%20text-anchor%3D%22middle%22%20fill%3D%22%239fbfff%22%20font-family%3D%22Segoe%20UI%2CArial%22%3ELibrary%20Edition%3C%2Ftext%3E%3Crect%20x%3D%2282%22%20y%3D%22430%22%20width%3D%22256%22%20height%3D%2224%22%20rx%3D%2212%22%20fill%3D%22%231aa67a%22%2F%3E%3Crect%20x%3D%22108%22%20y%3D%22468%22%20width%3D%22204%22%20height%3D%2218%22%20rx%3D%229%22%20fill%3D%22%232f74ff%22%2F%3E%3C%2Fsvg%3E" alt="History of Science cover" loading="lazy" />
+            <h3>History of Science</h3>
+            <p>Author: Peter J. Bowler</p>
+            <p class="status issued">Issued</p>
+            <button class="btn ghost" disabled>Issue</button>
+          </article>
+          <article class="card book-card">
+            <img class="book-cover" src="data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22420%22%20height%3D%22600%22%20viewBox%3D%220%200%20420%20600%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22g%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%221%22%20y2%3D%221%22%3E%3Cstop%20stop-color%3D%22%23112347%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%231f5ed6%22%2F%3E%3C%2FlinearGradient%3E%3C%2Fdefs%3E%3Crect%20width%3D%22420%22%20height%3D%22600%22%20fill%3D%22url%28%23g%29%22%2F%3E%3Crect%20x%3D%2226%22%20y%3D%2230%22%20width%3D%22368%22%20height%3D%22540%22%20rx%3D%2218%22%20fill%3D%22%2309152d%22%20stroke%3D%22%234f8cff%22%2F%3E%3Ctext%20x%3D%22210%22%20y%3D%22150%22%20font-size%3D%2226%22%20text-anchor%3D%22middle%22%20fill%3D%22%23dbe7ff%22%20font-family%3D%22Segoe%20UI%2CArial%22%3EViByte%20Picks%3C%2Ftext%3E%3Ctext%20x%3D%22210%22%20y%3D%22285%22%20font-size%3D%2238%22%20text-anchor%3D%22middle%22%20fill%3D%22%23ffffff%22%20font-family%3D%22Segoe%20UI%2CArial%22%20font-weight%3D%22700%22%3EHuman-Computer%20Interaction%3C%2Ftext%3E%3Ctext%20x%3D%22210%22%20y%3D%22345%22%20font-size%3D%2220%22%20text-anchor%3D%22middle%22%20fill%3D%22%239fbfff%22%20font-family%3D%22Segoe%20UI%2CArial%22%3ELibrary%20Edition%3C%2Ftext%3E%3Crect%20x%3D%2282%22%20y%3D%22430%22%20width%3D%22256%22%20height%3D%2224%22%20rx%3D%2212%22%20fill%3D%22%231aa67a%22%2F%3E%3Crect%20x%3D%22108%22%20y%3D%22468%22%20width%3D%22204%22%20height%3D%2218%22%20rx%3D%229%22%20fill%3D%22%232f74ff%22%2F%3E%3C%2Fsvg%3E" alt="Human-Computer Interaction cover" loading="lazy" />
+            <h3>Human-Computer Interaction</h3>
+            <p>Author: Alan Dix</p>
+            <p class="status available">Available</p>
+            <button class="btn ghost">Issue</button>
+          </article>
+          <article class="card book-card">
+            <img class="book-cover" src="data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22420%22%20height%3D%22600%22%20viewBox%3D%220%200%20420%20600%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22g%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%221%22%20y2%3D%221%22%3E%3Cstop%20stop-color%3D%22%23112347%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%231f5ed6%22%2F%3E%3C%2FlinearGradient%3E%3C%2Fdefs%3E%3Crect%20width%3D%22420%22%20height%3D%22600%22%20fill%3D%22url%28%23g%29%22%2F%3E%3Crect%20x%3D%2226%22%20y%3D%2230%22%20width%3D%22368%22%20height%3D%22540%22%20rx%3D%2218%22%20fill%3D%22%2309152d%22%20stroke%3D%22%234f8cff%22%2F%3E%3Ctext%20x%3D%22210%22%20y%3D%22150%22%20font-size%3D%2226%22%20text-anchor%3D%22middle%22%20fill%3D%22%23dbe7ff%22%20font-family%3D%22Segoe%20UI%2CArial%22%3EViByte%20Picks%3C%2Ftext%3E%3Ctext%20x%3D%22210%22%20y%3D%22285%22%20font-size%3D%2238%22%20text-anchor%3D%22middle%22%20fill%3D%22%23ffffff%22%20font-family%3D%22Segoe%20UI%2CArial%22%20font-weight%3D%22700%22%3EBlockchain%20Essentials%3C%2Ftext%3E%3Ctext%20x%3D%22210%22%20y%3D%22345%22%20font-size%3D%2220%22%20text-anchor%3D%22middle%22%20fill%3D%22%239fbfff%22%20font-family%3D%22Segoe%20UI%2CArial%22%3ELibrary%20Edition%3C%2Ftext%3E%3Crect%20x%3D%2282%22%20y%3D%22430%22%20width%3D%22256%22%20height%3D%2224%22%20rx%3D%2212%22%20fill%3D%22%231aa67a%22%2F%3E%3Crect%20x%3D%22108%22%20y%3D%22468%22%20width%3D%22204%22%20height%3D%2218%22%20rx%3D%229%22%20fill%3D%22%232f74ff%22%2F%3E%3C%2Fsvg%3E" alt="Blockchain Essentials cover" loading="lazy" />
+            <h3>Blockchain Essentials</h3>
+            <p>Author: Imran Bashir</p>
+            <p class="status available">Available</p>
+            <button class="btn ghost">Issue</button>
+          </article>
+          <article class="card book-card">
+            <img class="book-cover" src="data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22420%22%20height%3D%22600%22%20viewBox%3D%220%200%20420%20600%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22g%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%221%22%20y2%3D%221%22%3E%3Cstop%20stop-color%3D%22%23112347%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%231f5ed6%22%2F%3E%3C%2FlinearGradient%3E%3C%2Fdefs%3E%3Crect%20width%3D%22420%22%20height%3D%22600%22%20fill%3D%22url%28%23g%29%22%2F%3E%3Crect%20x%3D%2226%22%20y%3D%2230%22%20width%3D%22368%22%20height%3D%22540%22%20rx%3D%2218%22%20fill%3D%22%2309152d%22%20stroke%3D%22%234f8cff%22%2F%3E%3Ctext%20x%3D%22210%22%20y%3D%22150%22%20font-size%3D%2226%22%20text-anchor%3D%22middle%22%20fill%3D%22%23dbe7ff%22%20font-family%3D%22Segoe%20UI%2CArial%22%3EViByte%20Picks%3C%2Ftext%3E%3Ctext%20x%3D%22210%22%20y%3D%22285%22%20font-size%3D%2238%22%20text-anchor%3D%22middle%22%20fill%3D%22%23ffffff%22%20font-family%3D%22Segoe%20UI%2CArial%22%20font-weight%3D%22700%22%3EPsychology%20of%20Learning%3C%2Ftext%3E%3Ctext%20x%3D%22210%22%20y%3D%22345%22%20font-size%3D%2220%22%20text-anchor%3D%22middle%22%20fill%3D%22%239fbfff%22%20font-family%3D%22Segoe%20UI%2CArial%22%3ELibrary%20Edition%3C%2Ftext%3E%3Crect%20x%3D%2282%22%20y%3D%22430%22%20width%3D%22256%22%20height%3D%2224%22%20rx%3D%2212%22%20fill%3D%22%231aa67a%22%2F%3E%3Crect%20x%3D%22108%22%20y%3D%22468%22%20width%3D%22204%22%20height%3D%2218%22%20rx%3D%229%22%20fill%3D%22%232f74ff%22%2F%3E%3C%2Fsvg%3E" alt="Psychology of Learning cover" loading="lazy" />
+            <h3>Psychology of Learning</h3>
+            <p>Author: Jeanne Ormrod</p>
+            <p class="status issued">Issued</p>
+            <button class="btn ghost" disabled>Issue</button>
+          </article>
+          <article class="card book-card">
+            <img class="book-cover" src="data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22420%22%20height%3D%22600%22%20viewBox%3D%220%200%20420%20600%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22g%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%221%22%20y2%3D%221%22%3E%3Cstop%20stop-color%3D%22%23112347%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%231f5ed6%22%2F%3E%3C%2FlinearGradient%3E%3C%2Fdefs%3E%3Crect%20width%3D%22420%22%20height%3D%22600%22%20fill%3D%22url%28%23g%29%22%2F%3E%3Crect%20x%3D%2226%22%20y%3D%2230%22%20width%3D%22368%22%20height%3D%22540%22%20rx%3D%2218%22%20fill%3D%22%2309152d%22%20stroke%3D%22%234f8cff%22%2F%3E%3Ctext%20x%3D%22210%22%20y%3D%22150%22%20font-size%3D%2226%22%20text-anchor%3D%22middle%22%20fill%3D%22%23dbe7ff%22%20font-family%3D%22Segoe%20UI%2CArial%22%3EViByte%20Picks%3C%2Ftext%3E%3Ctext%20x%3D%22210%22%20y%3D%22285%22%20font-size%3D%2238%22%20text-anchor%3D%22middle%22%20fill%3D%22%23ffffff%22%20font-family%3D%22Segoe%20UI%2CArial%22%20font-weight%3D%22700%22%3ERenewable%20Energy%3C%2Ftext%3E%3Ctext%20x%3D%22210%22%20y%3D%22345%22%20font-size%3D%2220%22%20text-anchor%3D%22middle%22%20fill%3D%22%239fbfff%22%20font-family%3D%22Segoe%20UI%2CArial%22%3ELibrary%20Edition%3C%2Ftext%3E%3Crect%20x%3D%2282%22%20y%3D%22430%22%20width%3D%22256%22%20height%3D%2224%22%20rx%3D%2212%22%20fill%3D%22%231aa67a%22%2F%3E%3Crect%20x%3D%22108%22%20y%3D%22468%22%20width%3D%22204%22%20height%3D%2218%22%20rx%3D%229%22%20fill%3D%22%232f74ff%22%2F%3E%3C%2Fsvg%3E" alt="Renewable Energy cover" loading="lazy" />
+            <h3>Renewable Energy</h3>
+            <p>Author: David MacKay</p>
+            <p class="status available">Available</p>
+            <button class="btn ghost">Issue</button>
+          </article>
+          <article class="card book-card">
+            <img class="book-cover" src="data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22420%22%20height%3D%22600%22%20viewBox%3D%220%200%20420%20600%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22g%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%221%22%20y2%3D%221%22%3E%3Cstop%20stop-color%3D%22%23112347%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%231f5ed6%22%2F%3E%3C%2FlinearGradient%3E%3C%2Fdefs%3E%3Crect%20width%3D%22420%22%20height%3D%22600%22%20fill%3D%22url%28%23g%29%22%2F%3E%3Crect%20x%3D%2226%22%20y%3D%2230%22%20width%3D%22368%22%20height%3D%22540%22%20rx%3D%2218%22%20fill%3D%22%2309152d%22%20stroke%3D%22%234f8cff%22%2F%3E%3Ctext%20x%3D%22210%22%20y%3D%22150%22%20font-size%3D%2226%22%20text-anchor%3D%22middle%22%20fill%3D%22%23dbe7ff%22%20font-family%3D%22Segoe%20UI%2CArial%22%3EViByte%20Picks%3C%2Ftext%3E%3Ctext%20x%3D%22210%22%20y%3D%22285%22%20font-size%3D%2238%22%20text-anchor%3D%22middle%22%20fill%3D%22%23ffffff%22%20font-family%3D%22Segoe%20UI%2CArial%22%20font-weight%3D%22700%22%3ECreative%20Writing%20Lab%3C%2Ftext%3E%3Ctext%20x%3D%22210%22%20y%3D%22345%22%20font-size%3D%2220%22%20text-anchor%3D%22middle%22%20fill%3D%22%239fbfff%22%20font-family%3D%22Segoe%20UI%2CArial%22%3ELibrary%20Edition%3C%2Ftext%3E%3Crect%20x%3D%2282%22%20y%3D%22430%22%20width%3D%22256%22%20height%3D%2224%22%20rx%3D%2212%22%20fill%3D%22%231aa67a%22%2F%3E%3Crect%20x%3D%22108%22%20y%3D%22468%22%20width%3D%22204%22%20height%3D%2218%22%20rx%3D%229%22%20fill%3D%22%232f74ff%22%2F%3E%3C%2Fsvg%3E" alt="Creative Writing Lab cover" loading="lazy" />
+            <h3>Creative Writing Lab</h3>
+            <p>Author: Natalie Goldberg</p>
+            <p class="status available">Available</p>
+            <button class="btn ghost">Issue</button>
+          </article>
+          <article class="card book-card">
+            <img class="book-cover" src="data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22420%22%20height%3D%22600%22%20viewBox%3D%220%200%20420%20600%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22g%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%221%22%20y2%3D%221%22%3E%3Cstop%20stop-color%3D%22%23112347%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%231f5ed6%22%2F%3E%3C%2FlinearGradient%3E%3C%2Fdefs%3E%3Crect%20width%3D%22420%22%20height%3D%22600%22%20fill%3D%22url%28%23g%29%22%2F%3E%3Crect%20x%3D%2226%22%20y%3D%2230%22%20width%3D%22368%22%20height%3D%22540%22%20rx%3D%2218%22%20fill%3D%22%2309152d%22%20stroke%3D%22%234f8cff%22%2F%3E%3Ctext%20x%3D%22210%22%20y%3D%22150%22%20font-size%3D%2226%22%20text-anchor%3D%22middle%22%20fill%3D%22%23dbe7ff%22%20font-family%3D%22Segoe%20UI%2CArial%22%3EViByte%20Picks%3C%2Ftext%3E%3Ctext%20x%3D%22210%22%20y%3D%22285%22%20font-size%3D%2238%22%20text-anchor%3D%22middle%22%20fill%3D%22%23ffffff%22%20font-family%3D%22Segoe%20UI%2CArial%22%20font-weight%3D%22700%22%3EDeep%20Work%3C%2Ftext%3E%3Ctext%20x%3D%22210%22%20y%3D%22345%22%20font-size%3D%2220%22%20text-anchor%3D%22middle%22%20fill%3D%22%239fbfff%22%20font-family%3D%22Segoe%20UI%2CArial%22%3ELibrary%20Edition%3C%2Ftext%3E%3Crect%20x%3D%2282%22%20y%3D%22430%22%20width%3D%22256%22%20height%3D%2224%22%20rx%3D%2212%22%20fill%3D%22%231aa67a%22%2F%3E%3Crect%20x%3D%22108%22%20y%3D%22468%22%20width%3D%22204%22%20height%3D%2218%22%20rx%3D%229%22%20fill%3D%22%232f74ff%22%2F%3E%3C%2Fsvg%3E" alt="Deep Work cover" loading="lazy" />
+            <h3>Deep Work</h3>
+            <p>Author: Cal Newport</p>
+            <p class="status available">Available</p>
+            <button class="btn ghost">Issue</button>
+          </article>
+          <article class="card book-card">
+            <img class="book-cover" src="data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22420%22%20height%3D%22600%22%20viewBox%3D%220%200%20420%20600%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22g%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%221%22%20y2%3D%221%22%3E%3Cstop%20stop-color%3D%22%23112347%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%231f5ed6%22%2F%3E%3C%2FlinearGradient%3E%3C%2Fdefs%3E%3Crect%20width%3D%22420%22%20height%3D%22600%22%20fill%3D%22url%28%23g%29%22%2F%3E%3Crect%20x%3D%2226%22%20y%3D%2230%22%20width%3D%22368%22%20height%3D%22540%22%20rx%3D%2218%22%20fill%3D%22%2309152d%22%20stroke%3D%22%234f8cff%22%2F%3E%3Ctext%20x%3D%22210%22%20y%3D%22150%22%20font-size%3D%2226%22%20text-anchor%3D%22middle%22%20fill%3D%22%23dbe7ff%22%20font-family%3D%22Segoe%20UI%2CArial%22%3EViByte%20Picks%3C%2Ftext%3E%3Ctext%20x%3D%22210%22%20y%3D%22285%22%20font-size%3D%2238%22%20text-anchor%3D%22middle%22%20fill%3D%22%23ffffff%22%20font-family%3D%22Segoe%20UI%2CArial%22%20font-weight%3D%22700%22%3EAtomic%20Habits%3C%2Ftext%3E%3Ctext%20x%3D%22210%22%20y%3D%22345%22%20font-size%3D%2220%22%20text-anchor%3D%22middle%22%20fill%3D%22%239fbfff%22%20font-family%3D%22Segoe%20UI%2CArial%22%3ELibrary%20Edition%3C%2Ftext%3E%3Crect%20x%3D%2282%22%20y%3D%22430%22%20width%3D%22256%22%20height%3D%2224%22%20rx%3D%2212%22%20fill%3D%22%231aa67a%22%2F%3E%3Crect%20x%3D%22108%22%20y%3D%22468%22%20width%3D%22204%22%20height%3D%2218%22%20rx%3D%229%22%20fill%3D%22%232f74ff%22%2F%3E%3C%2Fsvg%3E" alt="Atomic Habits cover" loading="lazy" />
+            <h3>Atomic Habits</h3>
+            <p>Author: James Clear</p>
+            <p class="status issued">Issued</p>
+            <button class="btn ghost" disabled>Issue</button>
+          </article>
+          <article class="card book-card">
+            <img class="book-cover" src="data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22420%22%20height%3D%22600%22%20viewBox%3D%220%200%20420%20600%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22g%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%221%22%20y2%3D%221%22%3E%3Cstop%20stop-color%3D%22%23112347%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%231f5ed6%22%2F%3E%3C%2FlinearGradient%3E%3C%2Fdefs%3E%3Crect%20width%3D%22420%22%20height%3D%22600%22%20fill%3D%22url%28%23g%29%22%2F%3E%3Crect%20x%3D%2226%22%20y%3D%2230%22%20width%3D%22368%22%20height%3D%22540%22%20rx%3D%2218%22%20fill%3D%22%2309152d%22%20stroke%3D%22%234f8cff%22%2F%3E%3Ctext%20x%3D%22210%22%20y%3D%22150%22%20font-size%3D%2226%22%20text-anchor%3D%22middle%22%20fill%3D%22%23dbe7ff%22%20font-family%3D%22Segoe%20UI%2CArial%22%3EViByte%20Picks%3C%2Ftext%3E%3Ctext%20x%3D%22210%22%20y%3D%22285%22%20font-size%3D%2238%22%20text-anchor%3D%22middle%22%20fill%3D%22%23ffffff%22%20font-family%3D%22Segoe%20UI%2CArial%22%20font-weight%3D%22700%22%3EStartup%20Playbook%3C%2Ftext%3E%3Ctext%20x%3D%22210%22%20y%3D%22345%22%20font-size%3D%2220%22%20text-anchor%3D%22middle%22%20fill%3D%22%239fbfff%22%20font-family%3D%22Segoe%20UI%2CArial%22%3ELibrary%20Edition%3C%2Ftext%3E%3Crect%20x%3D%2282%22%20y%3D%22430%22%20width%3D%22256%22%20height%3D%2224%22%20rx%3D%2212%22%20fill%3D%22%231aa67a%22%2F%3E%3Crect%20x%3D%22108%22%20y%3D%22468%22%20width%3D%22204%22%20height%3D%2218%22%20rx%3D%229%22%20fill%3D%22%232f74ff%22%2F%3E%3C%2Fsvg%3E" alt="Startup Playbook cover" loading="lazy" />
+            <h3>Startup Playbook</h3>
+            <p>Author: Sam Altman</p>
+            <p class="status available">Available</p>
+            <button class="btn ghost">Issue</button>
+          </article>
+          <article class="card book-card">
+            <img class="book-cover" src="data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22420%22%20height%3D%22600%22%20viewBox%3D%220%200%20420%20600%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22g%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%221%22%20y2%3D%221%22%3E%3Cstop%20stop-color%3D%22%23112347%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%231f5ed6%22%2F%3E%3C%2FlinearGradient%3E%3C%2Fdefs%3E%3Crect%20width%3D%22420%22%20height%3D%22600%22%20fill%3D%22url%28%23g%29%22%2F%3E%3Crect%20x%3D%2226%22%20y%3D%2230%22%20width%3D%22368%22%20height%3D%22540%22%20rx%3D%2218%22%20fill%3D%22%2309152d%22%20stroke%3D%22%234f8cff%22%2F%3E%3Ctext%20x%3D%22210%22%20y%3D%22150%22%20font-size%3D%2226%22%20text-anchor%3D%22middle%22%20fill%3D%22%23dbe7ff%22%20font-family%3D%22Segoe%20UI%2CArial%22%3EViByte%20Picks%3C%2Ftext%3E%3Ctext%20x%3D%22210%22%20y%3D%22285%22%20font-size%3D%2238%22%20text-anchor%3D%22middle%22%20fill%3D%22%23ffffff%22%20font-family%3D%22Segoe%20UI%2CArial%22%20font-weight%3D%22700%22%3EUX%20Strategy%3C%2Ftext%3E%3Ctext%20x%3D%22210%22%20y%3D%22345%22%20font-size%3D%2220%22%20text-anchor%3D%22middle%22%20fill%3D%22%239fbfff%22%20font-family%3D%22Segoe%20UI%2CArial%22%3ELibrary%20Edition%3C%2Ftext%3E%3Crect%20x%3D%2282%22%20y%3D%22430%22%20width%3D%22256%22%20height%3D%2224%22%20rx%3D%2212%22%20fill%3D%22%231aa67a%22%2F%3E%3Crect%20x%3D%22108%22%20y%3D%22468%22%20width%3D%22204%22%20height%3D%2218%22%20rx%3D%229%22%20fill%3D%22%232f74ff%22%2F%3E%3C%2Fsvg%3E" alt="UX Strategy cover" loading="lazy" />
+            <h3>UX Strategy</h3>
+            <p>Author: Jaime Levy</p>
+            <p class="status available">Available</p>
+            <button class="btn ghost">Issue</button>
+          </article>
+          <article class="card book-card">
+            <img class="book-cover" src="data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22420%22%20height%3D%22600%22%20viewBox%3D%220%200%20420%20600%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22g%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%221%22%20y2%3D%221%22%3E%3Cstop%20stop-color%3D%22%23112347%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%231f5ed6%22%2F%3E%3C%2FlinearGradient%3E%3C%2Fdefs%3E%3Crect%20width%3D%22420%22%20height%3D%22600%22%20fill%3D%22url%28%23g%29%22%2F%3E%3Crect%20x%3D%2226%22%20y%3D%2230%22%20width%3D%22368%22%20height%3D%22540%22%20rx%3D%2218%22%20fill%3D%22%2309152d%22%20stroke%3D%22%234f8cff%22%2F%3E%3Ctext%20x%3D%22210%22%20y%3D%22150%22%20font-size%3D%2226%22%20text-anchor%3D%22middle%22%20fill%3D%22%23dbe7ff%22%20font-family%3D%22Segoe%20UI%2CArial%22%3EViByte%20Picks%3C%2Ftext%3E%3Ctext%20x%3D%22210%22%20y%3D%22285%22%20font-size%3D%2238%22%20text-anchor%3D%22middle%22%20fill%3D%22%23ffffff%22%20font-family%3D%22Segoe%20UI%2CArial%22%20font-weight%3D%22700%22%3EQuantum%20Computing%3C%2Ftext%3E%3Ctext%20x%3D%22210%22%20y%3D%22345%22%20font-size%3D%2220%22%20text-anchor%3D%22middle%22%20fill%3D%22%239fbfff%22%20font-family%3D%22Segoe%20UI%2CArial%22%3ELibrary%20Edition%3C%2Ftext%3E%3Crect%20x%3D%2282%22%20y%3D%22430%22%20width%3D%22256%22%20height%3D%2224%22%20rx%3D%2212%22%20fill%3D%22%231aa67a%22%2F%3E%3Crect%20x%3D%22108%22%20y%3D%22468%22%20width%3D%22204%22%20height%3D%2218%22%20rx%3D%229%22%20fill%3D%22%232f74ff%22%2F%3E%3C%2Fsvg%3E" alt="Quantum Computing cover" loading="lazy" />
+            <h3>Quantum Computing</h3>
+            <p>Author: Michael Nielsen</p>
+            <p class="status issued">Issued</p>
+            <button class="btn ghost" disabled>Issue</button>
+          </article>
+          <article class="card book-card">
+            <img class="book-cover" src="data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22420%22%20height%3D%22600%22%20viewBox%3D%220%200%20420%20600%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22g%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%221%22%20y2%3D%221%22%3E%3Cstop%20stop-color%3D%22%23112347%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%231f5ed6%22%2F%3E%3C%2FlinearGradient%3E%3C%2Fdefs%3E%3Crect%20width%3D%22420%22%20height%3D%22600%22%20fill%3D%22url%28%23g%29%22%2F%3E%3Crect%20x%3D%2226%22%20y%3D%2230%22%20width%3D%22368%22%20height%3D%22540%22%20rx%3D%2218%22%20fill%3D%22%2309152d%22%20stroke%3D%22%234f8cff%22%2F%3E%3Ctext%20x%3D%22210%22%20y%3D%22150%22%20font-size%3D%2226%22%20text-anchor%3D%22middle%22%20fill%3D%22%23dbe7ff%22%20font-family%3D%22Segoe%20UI%2CArial%22%3EViByte%20Picks%3C%2Ftext%3E%3Ctext%20x%3D%22210%22%20y%3D%22285%22%20font-size%3D%2238%22%20text-anchor%3D%22middle%22%20fill%3D%22%23ffffff%22%20font-family%3D%22Segoe%20UI%2CArial%22%20font-weight%3D%22700%22%3EFinancial%20Intelligence%3C%2Ftext%3E%3Ctext%20x%3D%22210%22%20y%3D%22345%22%20font-size%3D%2220%22%20text-anchor%3D%22middle%22%20fill%3D%22%239fbfff%22%20font-family%3D%22Segoe%20UI%2CArial%22%3ELibrary%20Edition%3C%2Ftext%3E%3Crect%20x%3D%2282%22%20y%3D%22430%22%20width%3D%22256%22%20height%3D%2224%22%20rx%3D%2212%22%20fill%3D%22%231aa67a%22%2F%3E%3Crect%20x%3D%22108%22%20y%3D%22468%22%20width%3D%22204%22%20height%3D%2218%22%20rx%3D%229%22%20fill%3D%22%232f74ff%22%2F%3E%3C%2Fsvg%3E" alt="Financial Intelligence cover" loading="lazy" />
+            <h3>Financial Intelligence</h3>
+            <p>Author: Karen Berman</p>
+            <p class="status available">Available</p>
+            <button class="btn ghost">Issue</button>
+          </article>
+        </div>
+      </section>
+
+      <!-- Issue / Return page -->
+      <section id="issue" class="page">
+        <header class="page-header">
+          <h2>Issue / Return Books</h2>
+          <p>Track your issued books and return them on time.</p>
+        </header>
+
+        <!-- Issued books + admin controls in one glance -->
+        <div class="grid two">
+          <article class="card student-only">
+            <h3>Issued Books</h3>
+            <div class="issued-item">
+              <div>
+                <strong>Clean Code</strong>
+                <p>Issue Date: 01 Oct</p>
+                <p>Due Date: 12 Oct</p>
+              </div>
+              <button class="btn ghost">Return</button>
+            </div>
+            <div class="issued-item overdue-item">
+              <div>
+                <strong>Algorithms Unlocked</strong>
+                <p>Issue Date: 20 Sep</p>
+                <p>Due Date: 18 Oct (Overdue)</p>
+                <p class="overdue-tag">Overdue by 4 days • Fine: ₹120</p>
+              </div>
+              <a href="#overdue-payment" class="btn accent">Pay Overdue</a>
+            </div>
+            <p class="fine">Fine indicator: ₹120 pending payment</p>
+          </article>
+
+          <article class="card admin-only">
+            <h3>Admin Issue Desk</h3>
+            <p>Quick view of the most recent admin-managed issues.</p>
+            <div class="issued-item">
+              <div>
+                <strong>Database Systems</strong>
+                <p>Issued to: STU3021</p>
+                <p>Status: Pending approval</p>
+              </div>
+              <button class="btn primary">Approve</button>
+            </div>
+            <div class="issued-item">
+              <div>
+                <strong>Operating Systems</strong>
+                <p>Return request: STU1150</p>
+                <p>Status: Awaiting inspection</p>
+              </div>
+              <button class="btn ghost">Mark Returned</button>
+            </div>
+            <p class="fine">Outstanding admin actions: 2</p>
+          </article>
+
+        </div>
+
+        <article class="card payment-card student-only" id="overdue-payment">
+          <h3>Pay Overdue Fine</h3>
+          <p class="sub">This section is only available on Issue / Return for pending fines.</p>
+          <div class="grid two">
+            <div>
+              <ul class="list">
+                <li>Book <span>Algorithms Unlocked</span></li>
+                <li>Overdue Days <span>4 days</span></li>
+                <li>Base Fine <span>₹100</span></li>
+                <li>Service Fee <span>₹20</span></li>
+                <li><strong>Total</strong> <strong>₹120</strong></li>
+              </ul>
+            </div>
+            <form class="form">
+              <label>UPI ID <input type="text" placeholder="student@upi" autocomplete="off" /></label>
+              <label>Card Last 4 Digits <input type="text" maxlength="4" placeholder="1234" autocomplete="off" /></label>
+              <label>Confirmation <input type="text" placeholder="Type PAID" autocomplete="off" /></label>
+              <button class="btn primary" type="button">Pay ₹120 Now</button>
+            </form>
+          </div>
+        </article>
+
+      </section>
+
+
+      <!-- Pod booking page -->
+      <section id="pod" class="page student-only">
+        <header class="page-header">
+          <h2>Pod Seat Booking</h2>
+          <p>Choose your preferred pod seat and study slot in the ViByte library.</p>
+        </header>
+
+        <div class="grid two">
+          <article class="card pod-room-card">
+            <h3>Private Study Room Booking</h3>
+            <p>Pick a room size, whiteboard, and extra equipment.</p>
+            <form class="form">
+              <label>
+                Room Size
+                <select>
+                  <option>Solo Pod (1)</option>
+                  <option>Focus Room (2-3)</option>
+                  <option>Team Room (4-6)</option>
+                  <option>Studio Room (8-10)</option>
+                </select>
+              </label>
+              <label>
+                Equipment
+                <select>
+                  <option>Whiteboard + Markers</option>
+                  <option>Whiteboard + Projector</option>
+                  <option>VR/Media Kit</option>
+                  <option>Dual Monitor Dock</option>
+                </select>
+              </label>
+              <label>
+                Time Slot
+                <input type="time" />
+              </label>
+              <button class="btn primary" type="button">Open Pod Booking</button>
+            </form>
+          </article>
+
+          <article class="card">
+            <h3>Booking Details</h3>
+            <form class="form">
+              <label>Date <input type="date" /></label>
+              <label>Time Slot
+                <select>
+                  <option>09:00 - 10:00</option>
+                  <option>10:00 - 11:00</option>
+                  <option>11:00 - 12:00</option>
+                  <option>14:00 - 15:00</option>
+                </select>
+              </label>
+              <label>Zone
+                <select>
+                  <option>Silent Pod Zone</option>
+                  <option>Collab Pod Zone</option>
+                  <option>Window Reading Pod Zone</option>
+                </select>
+              </label>
+              <button class="btn accent" type="button">Confirm Seat</button>
+            </form>
+          </article>
+
+          <article class="card">
+            <h3>Library Computer Booking</h3>
+            <p>Reserve high-performance PCs while finalizing your pod slot.</p>
+            <form class="form">
+              <label>
+                Computer Zone
+                <select>
+                  <option>Design Lab</option>
+                  <option>Programming Hub</option>
+                  <option>Data Science Bay</option>
+                </select>
+              </label>
+              <label>
+                Slot Duration
+                <select>
+                  <option>30 minutes</option>
+                  <option>1 hour</option>
+                  <option>2 hours</option>
+                </select>
+              </label>
+              <button class="btn accent" type="button">Reserve PC</button>
+            </form>
+          </article>
+
+          <article class="card seat-card">
+            <h3>Select Seat</h3>
+            <p class="sub">Legend: <span class="seat available">Available</span> <span class="seat selected">Selected</span> <span class="seat booked">Booked</span></p>
+            <div class="seat-grid">
+              <span class="seat booked">A1</span>
+              <input type="radio" name="pod-seat" id="seat-a2" class="seat-input" />
+              <label for="seat-a2" class="seat available">A2</label>
+              <input type="radio" name="pod-seat" id="seat-a3" class="seat-input" />
+              <label for="seat-a3" class="seat available">A3</label>
+              <span class="seat booked">A4</span>
+              <input type="radio" name="pod-seat" id="seat-a5" class="seat-input" />
+              <label for="seat-a5" class="seat available">A5</label>
+              <input type="radio" name="pod-seat" id="seat-a6" class="seat-input" />
+              <label for="seat-a6" class="seat available">A6</label>
+
+              <input type="radio" name="pod-seat" id="seat-b1" class="seat-input" />
+              <label for="seat-b1" class="seat available">B1</label>
+              <input type="radio" name="pod-seat" id="seat-b2" class="seat-input" />
+              <label for="seat-b2" class="seat available">B2</label>
+              <input type="radio" name="pod-seat" id="seat-b3" class="seat-input" checked />
+              <label for="seat-b3" class="seat selected">B3</label>
+              <input type="radio" name="pod-seat" id="seat-b4" class="seat-input" />
+              <label for="seat-b4" class="seat available">B4</label>
+              <span class="seat booked">B5</span>
+              <input type="radio" name="pod-seat" id="seat-b6" class="seat-input" />
+              <label for="seat-b6" class="seat available">B6</label>
+
+              <input type="radio" name="pod-seat" id="seat-c1" class="seat-input" />
+              <label for="seat-c1" class="seat available">C1</label>
+              <span class="seat booked">C2</span>
+              <input type="radio" name="pod-seat" id="seat-c3" class="seat-input" />
+              <label for="seat-c3" class="seat available">C3</label>
+              <input type="radio" name="pod-seat" id="seat-c4" class="seat-input" />
+              <label for="seat-c4" class="seat available">C4</label>
+              <input type="radio" name="pod-seat" id="seat-c5" class="seat-input" />
+              <label for="seat-c5" class="seat available">C5</label>
+              <input type="radio" name="pod-seat" id="seat-c6" class="seat-input" />
+              <label for="seat-c6" class="seat selected">C6</label>
+
+              <input type="radio" name="pod-seat" id="seat-d1" class="seat-input" />
+              <label for="seat-d1" class="seat available">D1</label>
+              <input type="radio" name="pod-seat" id="seat-d2" class="seat-input" />
+              <label for="seat-d2" class="seat available">D2</label>
+              <span class="seat booked">D3</span>
+              <input type="radio" name="pod-seat" id="seat-d4" class="seat-input" />
+              <label for="seat-d4" class="seat available">D4</label>
+              <input type="radio" name="pod-seat" id="seat-d5" class="seat-input" />
+              <label for="seat-d5" class="seat available">D5</label>
+              <input type="radio" name="pod-seat" id="seat-d6" class="seat-input" />
+              <label for="seat-d6" class="seat available">D6</label>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- Admin Control Center -->
+      <section id="admin" class="page admin-only">
+        <header class="page-header">
+          <h2>Admin Control Center</h2>
+          <p>Command your library operations with smart, student-safe tools.</p>
+        </header>
+
+        <div class="grid three">
+          <article class="card spotlight">
+            <h3>Fine Studio</h3>
+            <p>Apply or waive fines with reason tracking.</p>
+            <div class="admin-actions">
+              <label>
+                Student ID
+                <input type="text" placeholder="STU2024" />
+              </label>
+              <label>
+                Fine Amount (₹)
+                <input type="number" placeholder="e.g. 75" />
+              </label>
+              <label>
+                Reason
+                <input type="text" placeholder="Late return / Damage" />
+              </label>
+              <button class="btn accent">Update Ledger</button>
+            </div>
+          </article>
+
+          <article class="card spotlight">
+            <h3>Inventory Health</h3>
+            <p>Flag damaged books and request replacements.</p>
+            <div class="admin-actions">
+              <label>
+                Book ID
+                <input type="text" placeholder="BK-1124" />
+              </label>
+              <label>
+                Condition
+                <select>
+                  <option>Good</option>
+                  <option>Damaged</option>
+                  <option>Lost</option>
+                </select>
+              </label>
+              <button class="btn ghost">Send Replacement Request</button>
+            </div>
+          </article>
+
+          <article class="card spotlight">
+            <h3>Issue Approval Queue</h3>
+            <p>Approve manual issue/return requests in seconds.</p>
+            <div class="pill-list">
+              <span class="pill">STU2024 • "Design Patterns"</span>
+              <span class="pill">STU3021 • "AI Basics"</span>
+              <span class="pill">STU1150 • "Clean Code"</span>
+            </div>
+            <button class="btn primary">Approve Selected</button>
+          </article>
+        </div>
+
+                <div class="grid three">
+          <article class="card">
+            <h3>Resource Booking Supervisor</h3>
+            <p>Manage private rooms & computer kiosks.</p>
+            <div class="admin-actions">
+              <label>
+                Booking Type
+                <select>
+                  <option>Study Room</option>
+                  <option>Computer Desk</option>
+                </select>
+              </label>
+              <label>
+                Priority Level
+                <select>
+                  <option>Normal</option>
+                  <option>Exam Week Priority</option>
+                </select>
+              </label>
+              <button class="btn accent">Apply Priority</button>
+            </div>
+          </article>
+
+          <article class="card">
+            <h3>Smart Announcements</h3>
+            <p>Push alerts to students instantly.</p>
+            <div class="admin-actions">
+              <label>
+                Announcement
+                <input type="text" placeholder="Library open till 9 PM" />
+              </label>
+              <label>
+                Audience
+                <select>
+                  <option>All Students</option>
+                  <option>Final Year</option>
+                  <option>New Members</option>
+                </select>
+              </label>
+              <button class="btn primary">Broadcast</button>
+            </div>
+          </article>
+
+          <article class="card">
+            <h3>Noise & Seat Monitor</h3>
+            <p>Balance silent and group study zones.</p>
+            <div class="pill-list">
+              <span class="pill">Block A: Silent ✅</span>
+              <span class="pill">Block B: Moderate ⚠️</span>
+              <span class="pill">Block C: Active 🎧</span>
+            </div>
+            <button class="btn ghost">Send Quiet Reminder</button>
+          </article>
+        </div>
+
+        <div class="grid two">
+          <article class="card">
+            <h3>Membership Upgrades</h3>
+            <p>Grant premium lounge or extended loan access.</p>
+            <div class="admin-actions">
+              <label>
+                Student ID
+                <input type="text" placeholder="STU2024" />
+              </label>
+              <label>
+                Membership Tier
+                <select>
+                  <option>Standard</option>
+                  <option>Premium Lounge</option>
+                  <option>Research+</option>
+                </select>
+              </label>
+              <button class="btn accent">Upgrade Plan</button>
+            </div>
+          </article>
+
+          <article class="card">
+            <h3>Library Analytics Pulse</h3>
+            <p>Weekly operational highlights.</p>
+            <ul class="list">
+              <li>Peak check-ins <span>1:30 PM - 3 PM</span></li>
+              <li>Top genre <span>AI & ML</span></li>
+              <li>Most booked room <span>Innovation Hub</span></li>
+              <li>Avg. return time <span>4.2 days</span></li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+
+      <!-- Events and collaborative study hub -->
+      <section id="events" class="page student-only">
+        <header class="page-header">
+          <h2>Events & Study Hub</h2>
+          <p>Participate in library events, connect for group study, and plan your tasks.</p>
+        </header>
+
+        <div class="grid three">
+          <article class="card">
+            <h3>Upcoming Events</h3>
+            <ul class="list">
+              <li>Hackathon Warmup <span>Friday 4 PM</span></li>
+              <li>AI Reading Circle <span>Saturday 11 AM</span></li>
+              <li>Resume Review Booth <span>Monday 2 PM</span></li>
+            </ul>
+            <button class="btn accent">Participate</button>
+          </article>
+          <article class="card">
+            <h3>Group Study Match</h3>
+            <p>Have a vacancy in your study team? Post and match randomly.</p>
+            <form class="form">
+              <label>Topic <input type="text" placeholder="DBMS revision / DSA practice" /></label>
+              <label>Vacant Seats <input type="number" placeholder="2" min="1" max="6" /></label>
+              <label>Preferred Slot <input type="time" /></label>
+              <button class="btn primary" type="button">Post Vacancy</button>
+            </form>
+          </article>
+          <article class="card">
+            <h3>My Tailored To-Do</h3>
+            <p>Add tasks and keep your study streak alive.</p>
+            <form class="form">
+              <label>Add Task <input type="text" placeholder="Revise stacks and queues" /></label>
+              <label>Due Time <input type="time" /></label>
+              <button class="btn ghost" type="button">Add to List</button>
+            </form>
+            <ul class="list compact-list">
+              <li>Complete OS assignment <span>Today</span></li>
+              <li>Return Clean Code <span>Tomorrow</span></li>
+              <li>Join AI Reading Circle <span>Sat 11 AM</span></li>
+            </ul>
+          </article>
+        </div>
+
+        <div class="grid two">
+          <article class="card">
+            <h3>Study Videos (YouTube)</h3>
+            <div class="pill-list">
+              <a class="pill" href="https://www.youtube.com/watch?v=8hly31xKli0" target="_blank" rel="noopener">Data Structures Crash Course</a>
+              <a class="pill" href="https://www.youtube.com/watch?v=rfscVS0vtbw" target="_blank" rel="noopener">Python for Beginners</a>
+              <a class="pill" href="https://www.youtube.com/watch?v=RBSGKlAvoiM" target="_blank" rel="noopener">System Design Basics</a>
+              <a class="pill" href="https://www.youtube.com/watch?v=PkZNo7MFNFg" target="_blank" rel="noopener">JavaScript Full Course</a>
+              <a class="pill" href="https://www.youtube.com/watch?v=7S_tz1z_5bA" target="_blank" rel="noopener">DBMS in One Shot</a>
+              <a class="pill" href="https://www.youtube.com/watch?v=3qBXWUpoPHo" target="_blank" rel="noopener">Operating Systems Overview</a>
+              <a class="pill" href="https://www.youtube.com/watch?v=U4Jj0FHr5M4" target="_blank" rel="noopener">Computer Networks Basics</a>
+              <a class="pill" href="https://www.youtube.com/watch?v=8mAITcNt710" target="_blank" rel="noopener">DSA Revision Sprint</a>
+            </div>
+          </article>
+          <article class="card spotlight">
+            <h3>Event Participation Desk</h3>
+            <form class="form">
+              <label>Event Name
+                <select>
+                  <option>Hackathon Warmup</option>
+                  <option>AI Reading Circle</option>
+                  <option>Resume Review Booth</option>
+                </select>
+              </label>
+              <label>Student ID <input type="text" placeholder="STU2024" /></label>
+              <button class="btn primary" type="button">Register Now</button>
+            </form>
+          </article>
+        </div>
+      </section>
+
+      <!-- History / Profile page -->
+      <section id="history" class="page">
+        <header class="page-header">
+          <h2>History & Profile</h2>
+          <p>Your past activity and student details in one place.</p>
+        </header>
+
+        <div class="grid two">
+          <article class="card student-only">
+            <h3>Issue History</h3>
+            <ul class="list">
+              <li>Intro to Algorithms <span>Returned • Aug 21</span></li>
+              <li>Database Systems <span>Returned • Sep 12</span></li>
+              <li>AI Basics <span>Issued • Oct 02</span></li>
+            </ul>
+          </article>
+          <article class="card student-only">
+            <h3>Student Profile</h3>
+            <p><strong>Name:</strong> Aarav Mehta</p>
+            <p><strong>Department:</strong> CSE</p>
+            <p><strong>Semester:</strong> 5</p>
+            <p><strong>Membership:</strong> Active</p>
+          </article>
+          <article class="card admin-only">
+            <h3>Admin Activity Log</h3>
+            <ul class="list">
+              <li>Fine waived for STU2044 <span>₹50</span></li>
+              <li>Book replaced: OS Concepts <span>BK-1124</span></li>
+              <li>Room booking approved <span>Innovation Hub</span></li>
+            </ul>
+          </article>
+          <article class="card admin-only">
+            <h3>Admin Profile</h3>
+            <p><strong>Name:</strong> Riya Sharma</p>
+            <p><strong>Role:</strong> Library Administrator</p>
+            <p><strong>Shift:</strong> 9 AM - 5 PM</p>
+            <p><strong>Access:</strong> Full Control</p>
+          </article>
+        </div>
+
+                <div class="grid three">
+          <article class="card">
+            <h3>Learning Timeline</h3>
+            <p>Track your semester reading flow.</p>
+            <ul class="list">
+              <li>Week 1 <span>5 books explored</span></li>
+              <li>Week 2 <span>2 books issued</span></li>
+              <li>Week 3 <span>1 late return</span></li>
+              <li>Week 4 <span>3 new genres</span></li>
+            </ul>
+          </article>
+
+          <article class="card">
+            <h3>Achievements</h3>
+            <p>Your recent library badges.</p>
+            <div class="pill-list">
+              <span class="pill">Early Bird 📅</span>
+              <span class="pill">No-Fine Month ✅</span>
+              <span class="pill">Genre Explorer 🧭</span>
+            </div>
+            <p class="sub">Next badge: Night Owl Reader</p>
+          </article>
+
+          <article class="card">
+            <h3>Top Genres</h3>
+            <p>Your most-read categories this term.</p>
+            <ul class="list">
+              <li>AI & ML <span>7 books</span></li>
+              <li>Design <span>4 books</span></li>
+              <li>Productivity <span>3 books</span></li>
+            </ul>
+          </article>
+        </div>
+
+        <div class="grid two">
+          <article class="card">
+            <h3>Wishlist</h3>
+            <p>Books you want next in the library.</p>
+            <ul class="list">
+              <li>Designing Data-Intensive Apps <span>Requested</span></li>
+              <li>Thinking in Systems <span>Requested</span></li>
+              <li>The Pragmatic Programmer <span>Queued</span></li>
+            </ul>
+          </article>
+          <article class="card">
+            <h3>Reading Insights</h3>
+            <p>See your month in a snapshot.</p>
+            <div class="pill-list">
+              <span class="pill">Avg. daily study: 52 min</span>
+              <span class="pill">Preferred time: 6-8 PM</span>
+              <span class="pill">Completed: 4 books</span>
+            </div>
+          </article>
+        </div>
+      </section>
+    </main>
+  </div>
+</body>
+</html>
